@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubaline_ta/screens/login/login.dart';
+import 'package:tubaline_ta/services/service_user.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -9,12 +9,27 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  bool? isChecked = false;
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController repassword = TextEditingController();
+  final ServiceUser _serviceUser = ServiceUser();
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void register() {
+    _serviceUser.email = email.text;
+    _serviceUser.password = password.text;
+    _serviceUser.repassword = repassword.text;
+    _serviceUser.register(context);
+  }
 
   Widget _buildTextField({
     required bool obscureText,
     Widget? prefixedIcon,
     String? title,
+    required TextEditingController textEditingController,
   }) {
     return Material(
       shape: const RoundedRectangleBorder(
@@ -24,6 +39,7 @@ class _RegisterState extends State<Register> {
       ),
       elevation: 2,
       child: TextField(
+        controller: textEditingController,
         cursorWidth: 2,
         obscureText: obscureText,
         decoration: InputDecoration(
@@ -65,7 +81,7 @@ class _RegisterState extends State<Register> {
           ),
         ),
         child: const Text(
-          'Register',
+          'Login',
           style: TextStyle(
             fontFamily: 'PT-Sans',
             fontSize: 16,
@@ -74,9 +90,7 @@ class _RegisterState extends State<Register> {
           ),
         ),
         onPressed: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => const Login(),
-          ));
+          register();
         },
       ),
     );
@@ -114,6 +128,7 @@ class _RegisterState extends State<Register> {
                     obscureText: false,
                     prefixedIcon: const Icon(Icons.mail, color: Colors.black54),
                     title: 'Email',
+                    textEditingController: email,
                   ),
                   const SizedBox(
                     height: 20,
@@ -125,6 +140,19 @@ class _RegisterState extends State<Register> {
                     obscureText: true,
                     prefixedIcon: const Icon(Icons.lock, color: Colors.black54),
                     title: 'Password',
+                    textEditingController: password,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _buildTextField(
+                    obscureText: true,
+                    prefixedIcon: const Icon(Icons.lock, color: Colors.black54),
+                    title: 'Repassword',
+                    textEditingController: password,
                   ),
                   const SizedBox(
                     height: 15,
@@ -153,9 +181,12 @@ class _RegisterState extends State<Register> {
                           decoration: TextDecoration.none,
                         ),
                       ),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () =>
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const Register(),
+                          )),
                       child: const Text(
-                        'Login',
+                        'Sign Up',
                         style: TextStyle(
                           fontFamily: 'PT-Sans',
                           fontSize: 16,
