@@ -1,14 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPreference {
+class UserPreference {
   late SharedPreferences sharedPreferences;
   setSharedPreference() async {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  LoginPreference() {
+  UserPreference() {
     setSharedPreference();
   }
+
   Future<bool> getLogin() async {
     if (!sharedPreferences.containsKey('login')) {
       await sharedPreferences.setBool('login', false);
@@ -27,5 +28,7 @@ class LoginPreference {
 
   void setLogout() {
     sharedPreferences.remove('login');
+    sharedPreferences.remove('id');
+    sharedPreferences.remove('profile');
   }
 }

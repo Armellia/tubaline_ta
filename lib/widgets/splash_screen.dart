@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:tubaline_ta/preferences/login_preference.dart';
+import 'package:tubaline_ta/preferences/user_preference.dart';
 import 'package:tubaline_ta/screens/home/main_page.dart';
 import 'package:tubaline_ta/screens/login/login.dart';
 
@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  LoginPreference prefs = LoginPreference();
+  UserPreference prefs = UserPreference();
   void check(BuildContext context) async {
     bool? key;
     await prefs.getLogin().then((value) => key = value);
@@ -41,6 +41,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: CircularProgressIndicator());
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Tubaline",
+              style: TextStyle(fontSize: 24, color: Colors.black),
+            ),
+            SizedBox(height: 10),
+            CircularProgressIndicator(),
+          ],
+        )),
+      ),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tubaline_ta/providers/search_provider.dart';
 import 'package:tubaline_ta/screens/home/home.dart';
 import 'package:tubaline_ta/screens/profiles/profile.dart';
+import 'package:tubaline_ta/widgets/loading.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -23,11 +24,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 List<Widget> _listIndex = <Widget>[
-  ChangeNotifierProvider(
-      create: (context) => SearchProvider(), child: const Home()),
-  ChangeNotifierProvider(
-      create: (context) => SearchProvider(), child: const Profile()),
+  const Home(),
+  const Profile(),
 ];
+
+final _mainNavigatorKey = GlobalKey<NavigatorState>();
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentTab = 0;
@@ -48,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: SafeArea(top: true, child: _listIndex.elementAt(_currentTab)),
       bottomNavigationBar: BottomNavigationBar(
+        key: _mainNavigatorKey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

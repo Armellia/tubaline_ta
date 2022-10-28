@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:tubaline_ta/models/user.dart';
-import 'package:tubaline_ta/services/service_job.dart';
+import 'package:tubaline_ta/services/service_user.dart';
 
 class DetailJob extends StatefulWidget {
   const DetailJob({super.key, required this.id});
@@ -12,13 +12,13 @@ class DetailJob extends StatefulWidget {
 }
 
 class _DetailJobState extends State<DetailJob> {
-  final serviceJob = ServiceJob();
+  final serviceUser = ServiceUser();
   late Future<User> getUser;
 
   @override
   void initState() {
     super.initState();
-    getUser = serviceJob.getUser(widget.id);
+    getUser = serviceUser.getUser(widget.id);
   }
 
   @override
@@ -30,13 +30,6 @@ class _DetailJobState extends State<DetailJob> {
           style: const TextStyle(color: Colors.white60),
         ),
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white60,
-          ),
-        ),
       ),
       body: FutureBuilder(
           future: getUser,
@@ -80,7 +73,7 @@ class _DetailJobState extends State<DetailJob> {
                               foregroundColor: Colors.blue,
                             ),
                             onPressed: () =>
-                                print(snapshot.data!.createAt.toDate()),
+                                print(snapshot.data!.createdAt.toDate()),
                             child: const Center(
                               child: Text("Lamar"),
                             )),

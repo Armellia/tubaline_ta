@@ -1,0 +1,11 @@
+final path = storage.child("${_file!.path}.jpg");
+    
+try {
+      await _file!.readAsBytes().then((value) {
+        path.putData(value).whenComplete(() {
+          path.getDownloadURL().then((value) => setImageUrl(value));
+        });
+      });
+    } catch (e) {
+      print(e);
+    }

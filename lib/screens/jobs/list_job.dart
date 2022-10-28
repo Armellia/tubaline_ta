@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubaline_ta/models/user.dart';
 import 'package:tubaline_ta/screens/jobs/detail_job.dart';
-import 'package:tubaline_ta/services/service_job.dart';
+import 'package:tubaline_ta/services/service_user.dart';
 
 class ListJob extends StatefulWidget {
   const ListJob({super.key, required this.keyword, required this.sort});
@@ -13,10 +13,10 @@ class ListJob extends StatefulWidget {
 }
 
 class _ListJobState extends State<ListJob> {
-  final serviceJob = ServiceJob();
+  final serviceUser = ServiceUser();
 
   Stream<List<User>> fetchStream() async* {
-    yield await serviceJob.fetchAllUser(widget.sort);
+    yield await serviceUser.fetchAllUser(widget.sort);
   }
 
   @override
@@ -44,7 +44,7 @@ class _ListJobState extends State<ListJob> {
   Widget card(User user) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
           builder: (context) => DetailJob(
             id: user.id.toString(),
           ),

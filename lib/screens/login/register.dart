@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tubaline_ta/services/service_user.dart';
+import 'package:provider/provider.dart';
+import 'package:tubaline_ta/models/user.dart';
+import 'package:tubaline_ta/providers/loading_provier.dart';
+import 'package:tubaline_ta/services/service_login.dart';
+import 'package:tubaline_ta/widgets/loading.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -12,17 +16,20 @@ class _RegisterState extends State<Register> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController repassword = TextEditingController();
-  final ServiceUser _serviceUser = ServiceUser();
+  final ServiceLogin serviceLogin = ServiceLogin();
   @override
   void initState() {
     super.initState();
   }
 
   void register() {
-    _serviceUser.email = email.text;
-    _serviceUser.password = password.text;
-    _serviceUser.repassword = repassword.text;
-    _serviceUser.register(context);
+    context.read<LoadingProvider>().setLoading(true);
+    serviceLogin.email = email.text;
+    serviceLogin.password = password.text;
+    serviceLogin.repassword = repassword.text;
+    serviceLogin
+        .register(context)
+        .whenComplete(() => context.read<LoadingProvider>().setLoading(false));
   }
 
   Widget _buildTextField({
@@ -81,7 +88,7 @@ class _RegisterState extends State<Register> {
           ),
         ),
         child: const Text(
-          'Login',
+          'Register',
           style: TextStyle(
             fontFamily: 'PT-Sans',
             fontSize: 16,
@@ -100,104 +107,109 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ).copyWith(top: 60),
-              child: Column(
-                children: [
-                  const Text(
-                    'Tubaline',
-                    style: TextStyle(
-                      fontFamily: 'PT-Sans',
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  _buildTextField(
-                    obscureText: false,
-                    prefixedIcon: const Icon(Icons.mail, color: Colors.black54),
-                    title: 'Email',
-                    textEditingController: email,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  _buildTextField(
-                    obscureText: true,
-                    prefixedIcon: const Icon(Icons.lock, color: Colors.black54),
-                    title: 'Password',
-                    textEditingController: password,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  _buildTextField(
-                    obscureText: true,
-                    prefixedIcon: const Icon(Icons.lock, color: Colors.black54),
-                    title: 'Repassword',
-                    textEditingController: password,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  _buildLoginButton(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    '- OR -',
-                    style: TextStyle(
-                      fontFamily: 'PT-Sans',
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(
-                          decorationColor: Colors.black,
-                          decoration: TextDecoration.none,
-                        ),
+        body: LoadingScreen(
+          child: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                ).copyWith(top: 60),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Tubaline',
+                      style: TextStyle(
+                        fontFamily: 'PT-Sans',
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onPressed: () =>
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const Register(),
-                          )),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontFamily: 'PT-Sans',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildTextField(
+                      obscureText: false,
+                      prefixedIcon:
+                          const Icon(Icons.mail, color: Colors.black54),
+                      title: 'Email',
+                      textEditingController: email,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildTextField(
+                      obscureText: true,
+                      prefixedIcon:
+                          const Icon(Icons.lock, color: Colors.black54),
+                      title: 'Password',
+                      textEditingController: password,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildTextField(
+                      obscureText: true,
+                      prefixedIcon:
+                          const Icon(Icons.lock, color: Colors.black54),
+                      title: 'Repassword',
+                      textEditingController: repassword,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    _buildLoginButton(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      '- OR -',
+                      style: TextStyle(
+                        fontFamily: 'PT-Sans',
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(
+                            decorationColor: Colors.black,
+                            decoration: TextDecoration.none,
+                          ),
                         ),
-                      )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+                        onPressed: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Register(),
+                            )),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontFamily: 'PT-Sans',
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
