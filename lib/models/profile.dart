@@ -7,19 +7,26 @@ class ProfileModel {
   final DocumentReference? userId;
   final Timestamp? createdAt;
   final Timestamp? updatedAt;
-  final String? imageUrl;
+  String? imageUrl;
   final Timestamp? birthDay;
 
-  ProfileModel(this.name, this.numberPhone, this.id, this.userId,
-      this.createdAt, this.imageUrl, this.updatedAt, this.birthDay);
+  ProfileModel(
+      {this.name,
+      this.numberPhone,
+      this.id,
+      this.userId,
+      this.createdAt,
+      this.imageUrl,
+      this.updatedAt,
+      this.birthDay});
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'numberPhone': numberPhone,
-      'UpdatedAt': updatedAt,
       'imageUrl': imageUrl,
       'birthDay': birthDay,
+      'updatedAt': updatedAt
     };
   }
 

@@ -14,9 +14,10 @@ final UserPreference prefs = UserPreference();
 final storage = FirebaseStorage.instance.ref();
 
 class ServiceProfile {
+  String? url, link;
   final ImagePicker _imagePicker = ImagePicker();
   Future uploadGallery() async {
-    String url =
+    url =
         await _imagePicker.pickImage(source: ImageSource.gallery).then((value) {
       if (value == null) return "";
       return value.path;
@@ -24,26 +25,30 @@ class ServiceProfile {
     return url;
   }
 
-  Future uploadStorage(String url) async {
+  Future<String> uploadStorage(String url) async {
     var extension = url.toString().split('.').last;
     final path = storage.child("$url.jpg");
     final file = File(url);
-
+    String? link;
     try {
-      await path
-          .putFile(file, SettableMetadata(contentType: "image/$extension"))
-          .whenComplete(() {
-        path.getDownloadURL().then((value) => setImageUrl(value));
-      });
+      await path.putFile(
+          file, SettableMetadata(contentType: "image/$extension"));
     } catch (e) {
       print(e);
     }
+    return path.getDownloadURL().then((value) {
+      link = value;
+      return link!;
+    });
   }
 
-  Future setImageUrl(String url) async {
+  Future updateProfile(ProfileModel model) async {
     final prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('profile');
-    await profile.doc(id).set({"imageUrl": url}, SetOptions(merge: true));
+    await uploadStorage(model.imageUrl!).then((value) {
+      model.imageUrl = value;
+      profile.doc(id).set(model.toMap(), SetOptions(merge: true));
+    });
   }
 
   Future<List<ProfileModel>> fetchProfile() async {

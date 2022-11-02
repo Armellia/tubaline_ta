@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/models/user.dart';
 import 'package:tubaline_ta/preferences/user_preference.dart';
+import 'package:tubaline_ta/screens/profiles/experiences/experience_screen.dart';
 import 'package:tubaline_ta/screens/profiles/profile_detail.dart';
 import 'package:tubaline_ta/services/service_login.dart';
 import 'package:tubaline_ta/services/service_profile.dart';
@@ -21,7 +22,8 @@ class _ProfileState extends State<Profile> {
   final ServiceProfile serviceProfile = ServiceProfile();
   final ServiceUser serviceUser = ServiceUser();
   final UserPreference userPreference = UserPreference();
-
+  Image? image;
+  bool? loading;
   Stream<List<ProfileModel>> getdata() async* {
     yield await serviceProfile.fetchProfile();
   }
@@ -55,6 +57,9 @@ class _ProfileState extends State<Profile> {
           "Profile",
         ),
         elevation: 5,
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+        ],
       ),
       body: StreamBuilder(
         builder: (context, snapshot) {
@@ -82,18 +87,21 @@ class _ProfileState extends State<Profile> {
                         radius: 60.0,
                       ),
                       trailing: IconButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final model = snapshot.data!.first;
                             final pref = SharedPreferences.getInstance();
                             pref.then((value) {
                               value.setString("profile", model.id!);
                             });
-                            Navigator.of(context, rootNavigator: true)
-                                .push(MaterialPageRoute(
-                              builder: (context) => ProfileDetail(
-                                id: model.id!,
-                              ),
-                            ));
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileDetail(
+                                    id: model.id!,
+                                  ),
+                                )).then((value) {
+                              setState(() {});
+                            });
                           },
                           icon: const Icon(Icons.mode_edit_outline_outlined)),
                     ),
@@ -102,7 +110,16 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 20,
                 ),
-                buttonProfile("History", Icons.history_rounded, () {
+                buttonProfile("Pengalaman", Icons.explore, () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return ExperienceScreen();
+                    },
+                  )).then((value) {
+                    setState(() {});
+                  });
+                }),
+                buttonProfile("Logout", Icons.exit_to_app, () {
                   serviceLogin.signOut(context);
                 })
               ],
