@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/profile.dart';
@@ -34,7 +35,9 @@ class ServiceProfile {
       await path.putFile(
           file, SettableMetadata(contentType: "image/$extension"));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
     return path.getDownloadURL().then((value) {
       link = value;

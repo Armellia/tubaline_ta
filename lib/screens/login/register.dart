@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tubaline_ta/models/user.dart';
 import 'package:tubaline_ta/providers/loading_provier.dart';
 import 'package:tubaline_ta/services/service_login.dart';
 import 'package:tubaline_ta/widgets/loading.dart';

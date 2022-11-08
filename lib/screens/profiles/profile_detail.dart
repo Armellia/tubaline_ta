@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/models/user.dart';
 import 'package:tubaline_ta/providers/loading_provier.dart';
-import 'package:tubaline_ta/screens/profiles/profile.dart';
 import 'package:tubaline_ta/services/service_profile.dart';
 import 'package:tubaline_ta/services/service_user.dart';
 import 'package:tubaline_ta/widgets/loading.dart';
@@ -110,7 +109,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
   }) {
     return Container(
       color: Colors.white54,
-      margin: EdgeInsets.all(5.0),
+      margin: const EdgeInsets.all(5.0),
       width: MediaQuery.of(context).size.width,
       child: Card(
         elevation: 5,
@@ -120,15 +119,15 @@ class _ProfileDetailState extends State<ProfileDetail> {
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus!.unfocus();
             },
-            style: TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 24),
             controller: textEditingController,
             readOnly: readOnly,
             decoration: InputDecoration(
               label: Padding(
-                  padding: EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
                     title!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black54,
                       fontWeight: FontWeight.bold,
@@ -158,13 +157,13 @@ class _ProfileDetailState extends State<ProfileDetail> {
                   },
                   child: Text(
                     isRead ? "Edit" : "Save",
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   )),
             ),
           ],
         ),
         body: dataUser == null
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(),
               )
             : LoadingScreen(
@@ -174,7 +173,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     height: MediaQuery.of(context).size.height,
                     child: ListView(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         GestureDetector(
@@ -198,7 +197,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                 : CircleAvatar(
                                     foregroundImage: profileModel!.imageUrl ==
                                             null
-                                        ? AssetImage(
+                                        ? const AssetImage(
                                             'assets/images/profile.png')
                                         : Image.network(profileModel!.imageUrl!)
                                             .image,
@@ -206,7 +205,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                   ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         _buildTextField(
@@ -226,15 +225,15 @@ class _ProfileDetailState extends State<ProfileDetail> {
                             title: "No. Telepon"),
                         Container(
                           color: Colors.white54,
-                          margin: EdgeInsets.all(5.0),
+                          margin: const EdgeInsets.all(5.0),
                           width: MediaQuery.of(context).size.width,
                           child: Card(
                             elevation: 5,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
-                                leading: Icon(Icons.date_range),
-                                title: Text(
+                                leading: const Icon(Icons.date_range),
+                                title: const Text(
                                   "Pilih Tanggal",
                                   style: TextStyle(fontSize: 12),
                                 ),
@@ -242,7 +241,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     dateTime != null ? dateTime.toString() : "",
-                                    style: TextStyle(fontSize: 16),
+                                    style: const TextStyle(fontSize: 16),
                                   ),
                                 ),
                                 onTap: () async {

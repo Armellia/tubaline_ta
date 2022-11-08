@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/profile.dart';
-import 'package:tubaline_ta/models/user.dart';
 import 'package:tubaline_ta/preferences/user_preference.dart';
 import 'package:tubaline_ta/screens/profiles/experiences/experience_screen.dart';
 import 'package:tubaline_ta/screens/profiles/profile_detail.dart';
@@ -58,7 +56,7 @@ class _ProfileState extends State<Profile> {
         ),
         elevation: 5,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications))
         ],
       ),
       body: StreamBuilder(
@@ -81,7 +79,7 @@ class _ProfileState extends State<Profile> {
                           : snapshot.data!.elementAt(0).name.toString()),
                       leading: CircleAvatar(
                         foregroundImage: snapshot.data!.first.imageUrl == null
-                            ? AssetImage('assets/images/profile.png')
+                            ? const AssetImage('assets/images/profile.png')
                             : Image.network(snapshot.data!.first.imageUrl!)
                                 .image,
                         radius: 60.0,
@@ -113,7 +111,7 @@ class _ProfileState extends State<Profile> {
                 buttonProfile("Pengalaman", Icons.explore, () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return ExperienceScreen();
+                      return const ExperienceScreen();
                     },
                   )).then((value) {
                     setState(() {});

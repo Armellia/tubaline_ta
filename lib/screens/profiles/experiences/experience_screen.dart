@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:tubaline_ta/models/experience.dart';
 import 'package:tubaline_ta/providers/loading_provier.dart';
@@ -86,17 +84,17 @@ class _ExperienceScreenState extends State<ExperienceScreen> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancel")),
+                child: const Text("Cancel")),
             TextButton(
                 onPressed: () {
                   addExperience();
                 },
-                child: Text("Tambah")),
+                child: const Text("Tambah")),
           ],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: Text("Masukkan Pengalaman Kerja"),
+          title: const Text("Masukkan Pengalaman Kerja"),
           elevation: 2,
           content: SizedBox(
             height: MediaQuery.of(context).size.height * 0.25,
@@ -107,7 +105,7 @@ class _ExperienceScreenState extends State<ExperienceScreen> {
                 _buildtextfield(
                     title: "Pengalaman",
                     textEditingController: pengalamanController),
-                Divider(height: 20),
+                const Divider(height: 20),
                 _buildtextfield(
                     title: "Tahun", textEditingController: tahunController),
               ],
@@ -124,7 +122,7 @@ class _ExperienceScreenState extends State<ExperienceScreen> {
       child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text("Pengalaman Kerja"),
+            title: const Text("Pengalaman Kerja"),
             actions: [
               IconButton(
                   onPressed: () {
@@ -132,7 +130,7 @@ class _ExperienceScreenState extends State<ExperienceScreen> {
                       setState(() {});
                     });
                   },
-                  icon: Icon(Icons.add_circle_outline))
+                  icon: const Icon(Icons.add_circle_outline))
             ],
           ),
           body: SafeArea(
@@ -144,7 +142,7 @@ class _ExperienceScreenState extends State<ExperienceScreen> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.data == null || snapshot.data == "") {
+                  } else if (snapshot.data == null) {
                     return const Center(child: Text("Belum ada data"));
                   } else {
                     return ListView(
@@ -176,7 +174,7 @@ class _ExperienceScreenState extends State<ExperienceScreen> {
                     onPressed: () {
                       deleteExperience(data.id!);
                     },
-                    icon: Icon(Icons.delete)),
+                    icon: const Icon(Icons.delete)),
               ),
             ],
           ),

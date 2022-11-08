@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/experience.dart';
 import 'package:tubaline_ta/models/profile.dart';
@@ -15,11 +12,6 @@ final UserPreference prefs = UserPreference();
 final storage = FirebaseStorage.instance.ref();
 
 class ServiceExperience {
-  Future updateExperience(Experience model) async {
-    final prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('profile');
-  }
-
   Future<List<Experience>> fetchExperience() async {
     final prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('profile');

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tubaline_ta/preferences/user_preference.dart';
@@ -32,7 +33,9 @@ class ServiceLogin {
     } else {
       try {
         await signIn().then((value) {
-          print(value.user.uid);
+          if (kDebugMode) {
+            print(value.user.uid);
+          }
           prefs.setLogin(true, value.user.uid);
           _login(context);
         });

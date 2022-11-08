@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tubaline_ta/providers/search_provider.dart';
 import 'package:tubaline_ta/screens/home/home.dart';
 import 'package:tubaline_ta/screens/profiles/profile.dart';
-import 'package:tubaline_ta/widgets/loading.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

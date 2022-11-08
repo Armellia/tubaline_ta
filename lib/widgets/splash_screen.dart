@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text(
               "Tubaline",
               style: TextStyle(fontSize: 24, color: Colors.black),
