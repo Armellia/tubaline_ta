@@ -1,6 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubaline_ta/services/service_profile.dart';
 
 class UserPreference {
+  ServiceProfile serviceProfile = ServiceProfile();
   late SharedPreferences sharedPreferences;
   setSharedPreference() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -22,8 +24,11 @@ class UserPreference {
   }
 
   void setLogin(bool login, String id) {
-    sharedPreferences.setBool('login', login);
-    sharedPreferences.setString('id', id);
+    serviceProfile.setProfile(id).then((value) {
+      sharedPreferences.setString('profile', value);
+      sharedPreferences.setBool('login', login);
+      sharedPreferences.setString('id', id);
+    });
   }
 
   void setLogout() {
