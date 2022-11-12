@@ -24,6 +24,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
   DateTime? dateTime;
   File? image;
   bool isRead = true;
+  bool isError = false;
   Future<ProfileModel>? dataProfile;
   ProfileModel? profileModel;
   User? dataUser;
@@ -32,6 +33,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController teleponController = TextEditingController();
+  bool isImageEdit = false;
 
   Future<User> setData({ProfileModel? model}) async {
     final id = model!.userId!;
@@ -59,17 +61,34 @@ class _ProfileDetailState extends State<ProfileDetail> {
       setState(() {
         context.read<LoadingProvider>().setLoading(true);
       });
-      birthDay = Timestamp.fromDate(dateTime!);
+
+      birthDay = dateTime == null ? null : Timestamp.fromDate(dateTime!);
       final ProfileModel updateData = ProfileModel(
           name: nameController.text,
           updatedAt: Timestamp.now(),
-          birthDay: birthDay ?? profileModel!.birthDay,
-          numberPhone: int.parse(teleponController.text),
-          imageUrl: url ?? profileModel!.imageUrl!);
+          birthDay: birthDay != null ? profileModel!.birthDay : null,
+          numberPhone:
+              teleponController.text == "null" || teleponController.text == ""
+                  ? 0
+                  : int.parse(teleponController.text),
+          imageUrl: url != null
+              ? profileModel!.imageUrl == null
+                  ? null
+                  : profileModel!.imageUrl!
+              : null);
       setState(() {
-        serviceProfile.updateProfile(updateData).whenComplete(() {
+        isRead = !isRead;
+      });
+      setState(() {
+        serviceProfile
+            .updateProfile(updateData, isImageEdit, context)
+            .whenComplete(() {
           context.read<LoadingProvider>().setLoading(false);
-          Navigator.pop(context, true);
+        }).catchError((err) {
+          setState(() {
+            context.read<LoadingProvider>().setLoading(false);
+            isError = true;
+          });
         });
       });
     }
@@ -78,7 +97,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
   @override
   void initState() {
     super.initState();
-    dataProfile = serviceProfile.getProfile(widget.id);
+    dataProfile = serviceProfile.getProfile();
     dataProfile!.then((value) {
       setData(model: value).then(
         (valueU) {
@@ -88,7 +107,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
             dataUser = valueU;
           });
           nameController.text = profileModel?.name ?? "";
-          teleponController.text = profileModel?.numberPhone.toString() ?? "";
+          teleponController.text = profileModel?.numberPhone == null
+              ? ""
+              : profileModel!.numberPhone.toString();
           emailController.text = dataUser!.email;
           dateTime = profileModel?.birthDay?.toDate();
         },
@@ -106,12 +127,14 @@ class _ProfileDetailState extends State<ProfileDetail> {
     required bool readOnly,
     String? title,
     TextEditingController? textEditingController,
+    Color? colors,
+    required isError,
   }) {
     return Container(
-      color: Colors.white54,
       margin: const EdgeInsets.all(5.0),
       width: MediaQuery.of(context).size.width,
       child: Card(
+        color: colors ?? Colors.white,
         elevation: 5,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -123,6 +146,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
             controller: textEditingController,
             readOnly: readOnly,
             decoration: InputDecoration(
+              errorText: isError ? "Nomor harus lebih dari 10" : null,
               label: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
@@ -183,6 +207,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                             serviceProfile.uploadGallery().then((value) {
                               setState(() {
                                 if (value == null || value == "") return;
+                                isImageEdit = true;
                                 url = value;
                                 image = File(value);
                               });
@@ -212,17 +237,21 @@ class _ProfileDetailState extends State<ProfileDetail> {
                             context: context,
                             readOnly: isRead,
                             textEditingController: nameController,
-                            title: "Nama"),
+                            title: "Nama",
+                            isError: false),
                         _buildTextField(
+                            colors: Colors.white10,
                             context: context,
                             readOnly: true,
                             textEditingController: emailController,
-                            title: "Email"),
+                            title: "Email",
+                            isError: false),
                         _buildTextField(
                             context: context,
                             readOnly: isRead,
                             textEditingController: teleponController,
-                            title: "No. Telepon"),
+                            title: "No. Telepon",
+                            isError: isError),
                         Container(
                           color: Colors.white54,
                           margin: const EdgeInsets.all(5.0),
@@ -234,13 +263,15 @@ class _ProfileDetailState extends State<ProfileDetail> {
                               child: ListTile(
                                 leading: const Icon(Icons.date_range),
                                 title: const Text(
-                                  "Pilih Tanggal",
+                                  "Tanggal Lahir",
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 subtitle: Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
-                                    dateTime != null ? dateTime.toString() : "",
+                                    dateTime != null
+                                        ? dateTime.toString().substring(0, 10)
+                                        : "",
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                 ),

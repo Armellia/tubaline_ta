@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tubaline_ta/preferences/user_preference.dart';
 import 'package:tubaline_ta/screens/home/main_page.dart';
 import 'package:tubaline_ta/screens/login/login.dart';
+import 'package:tubaline_ta/services/service_profile.dart';
 import 'package:tubaline_ta/services/service_user.dart';
 
 import 'package:tubaline_ta/widgets/snackbar.dart';
@@ -17,6 +17,7 @@ class ServiceLogin {
   String? password;
   String? repassword;
   final ServiceUser serviceUser = ServiceUser();
+  final ServiceProfile serviceProfile = ServiceProfile();
   UserPreference prefs = UserPreference();
   Future signIn() async {
     return await auth.signInWithEmailAndPassword(
@@ -33,9 +34,6 @@ class ServiceLogin {
     } else {
       try {
         await signIn().then((value) {
-          if (kDebugMode) {
-            print(value.user.uid);
-          }
           prefs.setLogin(true, value.user.uid);
           _login(context);
         });

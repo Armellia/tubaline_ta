@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tubaline_ta/screens/home/home.dart';
 import 'package:tubaline_ta/screens/profiles/profile.dart';
+import 'package:tubaline_ta/services/service_profile.dart';
+import 'package:tubaline_ta/services/service_user.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -29,6 +31,8 @@ final _mainNavigatorKey = GlobalKey<NavigatorState>();
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentTab = 0;
+  ServiceUser serviceUser = ServiceUser();
+  ServiceProfile serviceProfile = ServiceProfile();
 
   void _selectedTab(int index) {
     setState(() {
@@ -42,10 +46,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(top: true, child: _listIndex.elementAt(_currentTab)),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 5,
         key: _mainNavigatorKey,
         items: const [
           BottomNavigationBarItem(

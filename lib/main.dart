@@ -3,6 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:tubaline_ta/providers/loading_provier.dart';
 import 'package:tubaline_ta/providers/search_provider.dart';
+import 'package:tubaline_ta/providers/personal_information_provider.dart';
+import 'package:tubaline_ta/services/service_profile.dart';
+import 'package:tubaline_ta/services/service_user.dart';
 
 import 'package:tubaline_ta/widgets/splash_screen.dart';
 import 'firebase_options.dart';
@@ -21,6 +24,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  ServiceUser serviceUser = ServiceUser();
+  ServiceProfile serviceProfile = ServiceProfile();
   @override
   void initState() {
     super.initState();
@@ -34,6 +39,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<SearchProvider>(create: (_) => SearchProvider()),
         ChangeNotifierProvider<LoadingProvider>(
             create: (_) => LoadingProvider()),
+        ChangeNotifierProvider<PersonalProvider>(
+            create: (_) => PersonalProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

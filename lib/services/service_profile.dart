@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/preferences/user_preference.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tubaline_ta/widgets/snackbar.dart';
 
 final db = FirebaseFirestore.instance;
 final profile = db.collection("profile");
@@ -45,13 +47,34 @@ class ServiceProfile {
     });
   }
 
-  Future updateProfile(ProfileModel model) async {
+  Future updateProfile(
+      ProfileModel model, bool isImageEdit, BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('profile');
-    await uploadStorage(model.imageUrl!).then((value) {
-      model.imageUrl = value;
-      profile.doc(id).set(model.toMap(), SetOptions(merge: true));
-    });
+    try {
+      if (model.name.toString().isEmpty) {
+        throw "Nama harus diisi";
+      }
+      if (model.numberPhone.toString().isEmpty ||
+          model.numberPhone.toString().length < 10) {
+        throw "Nomor Telepon harus lebih dari 10 digit";
+      }
+      if (!isImageEdit) {
+        await profile
+            .doc(id)
+            .set(model.toMap(), SetOptions(merge: true))
+            .whenComplete(() => Navigator.pop(context));
+      } else {
+        await uploadStorage(model.imageUrl!).then((value) {
+          model.imageUrl = value;
+          profile.doc(id).set(model.toMap(), SetOptions(merge: true));
+          Navigator.pop(context);
+        });
+      }
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      SnackBars().showSnackBar(context, e.toString());
+    }
   }
 
   Future<List<ProfileModel>> fetchProfile() async {
@@ -64,10 +87,18 @@ class ServiceProfile {
         .toList();
   }
 
-  Future<ProfileModel> getProfile(String id) async {
-    DocumentReference<Map<String, dynamic>> snapshot = profile.doc(id);
+  Future<ProfileModel> getProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final idP = prefs.getString('profile');
+    DocumentReference<Map<String, dynamic>> snapshot = profile.doc(idP);
     return snapshot.get().then((value) {
       return ProfileModel.fromDocumentSnapshot(value);
     });
+  }
+
+  Future<String> setProfile(String id) async {
+    DocumentReference<Map<String, dynamic>> docs = db.doc("users/$id");
+    final snapshot = await profile.where('userId', isEqualTo: docs).get();
+    return snapshot.docs.first.id;
   }
 }

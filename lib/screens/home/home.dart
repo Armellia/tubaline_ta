@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/providers/search_provider.dart';
+import 'package:tubaline_ta/screens/jobs/add_job.dart';
 import 'package:tubaline_ta/screens/jobs/list_job.dart';
+import 'package:tubaline_ta/services/service_profile.dart';
+import 'package:tubaline_ta/widgets/alert.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,6 +21,8 @@ class _HomeState extends State<Home> {
   late TextEditingController textSearch = TextEditingController(
     text: initalize,
   );
+  ServiceProfile serviceProfile = ServiceProfile();
+  ProfileModel? model;
 
   void setSort(bool sort) {
     setState(() {
@@ -158,13 +164,39 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        showDialogue(),
-        buttonSearch(),
-        ListJob(keyword: initalize, sort: sort),
-      ],
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          serviceProfile
+              .getProfile()
+              .then((value) => model = value)
+              .whenComplete(() {
+            if (model?.numberPhone.toString() == null || model?.name == null) {
+              Alert().show(context, "Lengkapi data profile terlebih dahulu");
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddJob(),
+                  )).then((value) {
+                setState(() {});
+              });
+            }
+          });
+        },
+        elevation: 5,
+        highlightElevation: 5,
+        tooltip: "Tambah",
+        child: const Icon(Icons.add),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          showDialogue(),
+          buttonSearch(),
+          ListJob(keyword: initalize, sort: sort),
+        ],
+      ),
     );
   }
 }
