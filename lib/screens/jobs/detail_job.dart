@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:tubaline_ta/models/job.dart';
 import 'package:tubaline_ta/models/myapply.dart';
 import 'package:tubaline_ta/services/service_job.dart';
+import 'package:tubaline_ta/widgets/alert.dart';
 
 class DetailJob extends StatefulWidget {
-  const DetailJob({super.key, required this.id});
+  const DetailJob({super.key, required this.id, this.done});
   final String id;
+  final bool? done;
   @override
   State<DetailJob> createState() => _DetailJobState();
 }
@@ -20,7 +22,6 @@ class _DetailJobState extends State<DetailJob> {
   void initState() {
     super.initState();
     getJob = serviceJob.getJob(widget.id);
-    data = serviceJob.checkApply(widget.id);
   }
 
   @override
@@ -63,22 +64,39 @@ class _DetailJobState extends State<DetailJob> {
                         height: MediaQuery.of(context).size.height * 0.10,
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.all(5),
-                        child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  width: 3, color: Colors.blueAccent),
-                              backgroundColor: Colors.white70,
-                              foregroundColor: Colors.blue,
-                            ),
-                            onPressed: () {
-                              print(data!.then((value) {
-                                print(value.id);
-                              }));
-                              // lamar(snapshot.data!.id!);
-                            },
-                            child: const Center(
-                              child: Text("Lamar"),
-                            )),
+                        child: widget.done != null
+                            ? widget.done!
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey[200],
+                                    ),
+                                    onPressed: () {
+                                      Alert().show(context,
+                                          "Anda telah melamar pekerjaan ini");
+                                    },
+                                    child: const Center(
+                                      child: Text(
+                                        "Lamar",
+                                        style: TextStyle(color: Colors.black45),
+                                      ),
+                                    ))
+                                : OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                          width: 3, color: Colors.blueAccent),
+                                      backgroundColor: Colors.white70,
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () {
+                                      // print(data!.then((value) {
+                                      //   print(value.id);
+                                      // }));
+                                      lamar(snapshot.data!.id!);
+                                    },
+                                    child: const Center(
+                                      child: Text("Lamar"),
+                                    ))
+                            : null,
                       ),
                     )
                   ],
@@ -90,8 +108,6 @@ class _DetailJobState extends State<DetailJob> {
   }
 
   void lamar(String id) async {
-    await serviceJob.lamarJob(context, id).whenComplete(() {
-      Navigator.pop(context);
-    });
+    await serviceJob.lamarJob(context, id).whenComplete(() {});
   }
 }

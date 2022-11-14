@@ -3,8 +3,8 @@ import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/models/user.dart';
 
 class PersonalProvider extends ChangeNotifier {
-  final String _str = "hello";
-  String get str => _str;
+  String? _idP;
+  String? get idP => _idP;
   User? _user;
   User? get user => _user;
   ProfileModel? _profile;
@@ -16,6 +16,11 @@ class PersonalProvider extends ChangeNotifier {
 
   void setProfile(ProfileModel data) {
     _profile = data;
+    notifyListeners();
+  }
+
+  void setId(String data) {
+    _idP = data;
     notifyListeners();
   }
 }

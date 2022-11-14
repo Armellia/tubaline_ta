@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/preferences/user_preference.dart';
-import 'package:tubaline_ta/screens/profiles/experiences/experience_screen.dart';
+import 'package:tubaline_ta/screens/experiences/experience_screen.dart';
+import 'package:tubaline_ta/screens/jobs/my_job.dart';
 import 'package:tubaline_ta/screens/profiles/profile_detail.dart';
 import 'package:tubaline_ta/services/service_login.dart';
 import 'package:tubaline_ta/services/service_profile.dart';
@@ -112,6 +113,17 @@ class _ProfileState extends State<Profile> {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return const ExperienceScreen();
+                    },
+                  )).then((value) {
+                    setState(() {});
+                  });
+                }),
+                buttonProfile("Post Pekerjaan", Icons.explore, () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return MyJob(
+                        model: snapshot.data!.first,
+                      );
                     },
                   )).then((value) {
                     setState(() {});

@@ -1,10 +1,16 @@
 import 'dart:async';
+import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/job.dart';
 import 'package:tubaline_ta/models/profile.dart';
+import 'package:tubaline_ta/providers/personal_information_provider.dart';
 import 'package:tubaline_ta/screens/jobs/detail_job.dart';
 import 'package:tubaline_ta/services/service_job.dart';
+import 'package:tubaline_ta/widgets/alert.dart';
 
 class ListJob extends StatefulWidget {
   const ListJob({super.key, required this.keyword, required this.sort});
@@ -19,8 +25,8 @@ ServiceJob serviceJob = ServiceJob();
 
 class _ListJobState extends State<ListJob> {
   List<ProfileModel> dataProfile = [];
-  List<ProfileModel> dataProfileFilter = [];
   bool loading = true;
+  String? id;
   Stream<List<Job>> fetchData() async* {
     yield await serviceJob.fetchJobs(widget.sort);
   }
@@ -50,12 +56,22 @@ class _ListJobState extends State<ListJob> {
         .first;
   }
 
+  bool check(Job job) {
+    if (job.pelamarId == null) return false;
+    final data = job.pelamarId as LinkedHashMap;
+    final idP = db.doc('profile/$id');
+    return data.containsValue(idP);
+  }
+
   @override
   void initState() {
     super.initState();
     serviceJob.fetchProfile().then((value) {
-      setState(() {
-        dataProfile.addAll(value);
+      SharedPreferences.getInstance().then((val) {
+        id = val.getString('profile');
+        setState(() {
+          dataProfile.addAll(value);
+        });
       });
     });
   }
@@ -93,11 +109,24 @@ class _ListJobState extends State<ListJob> {
   Widget card(Job job, ProfileModel model) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-          builder: (context) => DetailJob(
-            id: job.id.toString(),
-          ),
-        ));
+        if (job.pembuatId!.id.compareTo(id!) == 0) {
+          Alert()
+              .show(context, "Kamu tidak dapat melamar pekerjaanmu sendiri")
+              .whenComplete(() {
+            Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+              builder: (context) => DetailJob(
+                id: job.id.toString(),
+              ),
+            ));
+          });
+        } else {
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            builder: (context) => DetailJob(
+              done: check(job),
+              id: job.id.toString(),
+            ),
+          ));
+        }
       },
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -128,6 +157,12 @@ class _ListJobState extends State<ListJob> {
                     time(job.createdAt!.toDate()),
                     style: const TextStyle(color: Colors.black54, fontSize: 11),
                   ),
+                  trailing: check(job)
+                      ? Text(
+                          'Kamu telah melamar pekerjaan ini',
+                          style: TextStyle(color: Colors.red[200]),
+                        )
+                      : null,
                 ),
               ],
             ),

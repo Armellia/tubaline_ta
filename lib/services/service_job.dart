@@ -47,13 +47,16 @@ class ServiceJob {
     });
   }
 
-  Future deleteExperiece(String id) async {
-    DocumentReference<Map<String, dynamic>> snapshot = jobs.doc(id);
-    return snapshot.delete();
-  }
-
   Future<List<ProfileModel>> fetchProfile() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await profile.get();
+    return snapshot.docs.map((e) {
+      return ProfileModel.fromDocumentSnapshot(e);
+    }).toList();
+  }
+
+  Future<List<ProfileModel>> fetchProfileById(List id) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await profile.where(db.doc, whereIn: id).get();
     return snapshot.docs.map((e) {
       return ProfileModel.fromDocumentSnapshot(e);
     }).toList();
@@ -97,8 +100,11 @@ class ServiceJob {
     });
   }
 
-  Future<MyApply> checkApply(String id) async {
-    final snapshot = await myApply.get();
-    return MyApply.fromDocumentSnapshot(snapshot.docs.first);
+  Future<List<Job>> getJobByProfile(String id) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await jobs.where('pembuatId', isEqualTo: db.doc('profile/$id')).get();
+    return snapshot.docs.map((e) {
+      return Job.fromDocumentSnapshot(e);
+    }).toList();
   }
 }
