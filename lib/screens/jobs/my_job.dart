@@ -1,8 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:tubaline_ta/models/job.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/screens/jobs/detail_my_job.dart';
@@ -80,12 +78,12 @@ class _MyJobState extends State<MyJob> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("data"),
+        title: const Text("data"),
         centerTitle: true,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: StreamBuilder(
           stream: fetchJob(),
           builder: (context, snapshot) {

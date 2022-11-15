@@ -2,8 +2,6 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:tubaline_ta/models/job.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/services/service_job.dart';
@@ -31,7 +29,7 @@ class _DetailMyJobState extends State<DetailMyJob> {
     dataPelamar = pelamar!.values.toList();
     serviceJob.fetchProfile().then((value) {
       dataProfile.addAll(value);
-      dataPelamar.forEach((element) {
+      dataPelamar.map((element) {
         data = element as DocumentReference;
         dataProfileFilter.addAll(dataProfile
             .where((element) => element.id!.compareTo(data!.id) == 0)
@@ -52,13 +50,13 @@ class _DetailMyJobState extends State<DetailMyJob> {
         ),
         body: Container(
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: widget.data.pelamarId == null
-                ? Center(
+                ? const Center(
                     child: Text("Tidak ada pelamar"),
                   )
                 : loading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : ListView.builder(

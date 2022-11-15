@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/job.dart';
 import 'package:tubaline_ta/models/profile.dart';
-import 'package:tubaline_ta/providers/personal_information_provider.dart';
 import 'package:tubaline_ta/screens/jobs/detail_job.dart';
 import 'package:tubaline_ta/services/service_job.dart';
 import 'package:tubaline_ta/widgets/alert.dart';

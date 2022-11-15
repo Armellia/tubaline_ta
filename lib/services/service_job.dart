@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/job.dart';
-import 'package:tubaline_ta/models/myapply.dart';
 import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/preferences/user_preference.dart';
 import 'package:firebase_storage/firebase_storage.dart';
