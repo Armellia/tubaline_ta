@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubaline_ta/models/experience.dart';
-import 'package:tubaline_ta/models/profile.dart';
 import 'package:tubaline_ta/preferences/user_preference.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -31,11 +30,13 @@ class ServiceExperience {
     await experience.add(data.toMap());
   }
 
-  Future<ProfileModel> getExperience(String id) async {
-    DocumentReference<Map<String, dynamic>> snapshot = profile.doc(id);
-    return snapshot.get().then((value) {
-      return ProfileModel.fromDocumentSnapshot(value);
-    });
+  Future<List<Experience>> getExperience(String id) async {
+    final docs = db.doc('profile/$id');
+    final query = experience.where('profileId', isEqualTo: docs);
+    final snapshot = await query.get();
+    return snapshot.docs.map((value) {
+      return Experience.fromDocumentSnapshot(value);
+    }).toList();
   }
 
   Future deleteExperiece(String id) async {

@@ -22,8 +22,10 @@ class ServiceJob {
   ServiceProfile serviceProfile = ServiceProfile();
   ProfileModel? dataProfile;
   Future<List<Job>> fetchJobs(bool sort) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await jobs.orderBy('createdAt', descending: sort).get();
+    QuerySnapshot<Map<String, dynamic>> snapshot = await jobs
+        .where('isActive', isEqualTo: 1)
+        .orderBy('createdAt', descending: sort)
+        .get();
 
     return snapshot.docs
         .map((docSnapshot) => Job.fromDocumentSnapshot(docSnapshot))
@@ -93,17 +95,31 @@ class ServiceJob {
               print(value);
             }
           });
-          Alert().show(context, "Success");
+          Alert().show(context, "Success").whenComplete(() {
+            Navigator.pop(context);
+          });
         });
       }
     });
   }
 
   Future<List<Job>> getJobByProfile(String id) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await jobs.where('pembuatId', isEqualTo: db.doc('profile/$id')).get();
+    int angka = 1;
+    QuerySnapshot<Map<String, dynamic>> snapshot = await jobs
+        .where('pembuatId', isEqualTo: db.doc('profile/$id'))
+        .where('isActive', isEqualTo: angka)
+        .get();
     return snapshot.docs.map((e) {
       return Job.fromDocumentSnapshot(e);
     }).toList();
+  }
+
+  Future deactiveJob(String id, BuildContext context) async {
+    final active = <String, int>{'isActive': 0};
+    DocumentReference<Map<String, dynamic>> snapshot = jobs.doc(id);
+    snapshot.update(active);
+    Alert().show(context, "Post telah dinonaktifkan").whenComplete(() {
+      Navigator.pop(context);
+    });
   }
 }

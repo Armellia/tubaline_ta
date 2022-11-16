@@ -116,7 +116,11 @@ class _MyJobState extends State<MyJob> {
             context,
             MaterialPageRoute(
               builder: (context) => DetailMyJob(data: job),
-            ));
+            )).whenComplete(() {
+          setState(() {
+            fetchJob();
+          });
+        });
       },
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
